@@ -1,17 +1,30 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ReadingCard from './ReadingCard'
+import { getAllDays } from '../services/FirestoreServices'
 
-const ReadingScreen = ({navigation}) => {
+const ReadingScreen = ({ navigation }) => {
 
-    // TODO: Get all Days
-  var dummyReading = {name: "Monday", icon: "sun", id: "123456789"}
+  useEffect(() => {
+    handleGettingDays()
+  }, [])
+
+  const [days, setDays] = useState([]);
+
+  const handleGettingDays = async () => {
+    var daysData = await getAllDays();
+
+    setDays(daysData);
+  }
 
   return (
     <View style={styles.container}>
       <Button title='Add Reading' onPress={() => navigation.navigate("Add")} />
 
-      <ReadingCard day={dummyReading} />
+      {/* TODO: Get all days and display them here using the reading card (doesnt include the readings data, just the days data) */}
+      {days.map((item) => (
+        <ReadingCard day={item} key={item.id} />
+      ))}
 
     </View>
   )
@@ -20,7 +33,7 @@ const ReadingScreen = ({navigation}) => {
 export default ReadingScreen
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20
-    }
+  container: {
+    padding: 20
+  }
 })
